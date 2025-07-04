@@ -132,7 +132,6 @@ class Tamu extends ResourceController
             'nohp' => $this->request->getPost('nohp'),
             'jenkel' => $this->request->getPost('jenkel'),
             'tgllahir' => $this->request->getPost('tgllahir'),
-            'iduser' => session()->get('id') ?? null // Ambil ID user dari session, jika tidak ada, set null
         ];
         
         $this->tamuModel->insert($data);
