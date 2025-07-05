@@ -37,7 +37,7 @@ class Kamar extends ResourceController
         if ($this->request->isAJAX()) {
             $db = db_connect();
             $builder = $db->table('kamar')
-                          ->select('idkamar, nama, harga, kapasitas, status_kamar, created_at');
+                          ->select('idkamar, nama, harga, kapasitas, status_kamar');
 
             return DataTable::of($builder)
                 ->addNumbering('no')

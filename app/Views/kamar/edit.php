@@ -1,16 +1,7 @@
 <?= $this->extend('layouts/admin_layout') ?>
 
 <?= $this->section('styles') ?>
-<style>
-    .preview-image {
-        max-width: 200px;
-        margin-top: 10px;
-        border-radius: 5px;
-    }
-    .form-label {
-        font-weight: 500;
-    }
-</style>
+
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>

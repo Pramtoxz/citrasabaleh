@@ -1,62 +1,10 @@
 <?= $this->extend('layouts/admin_layout') ?>
 
 <?= $this->section('styles') ?>
-<!-- DataTables CSS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
+
 
 <!-- Custom Style for SweetAlert2 -->
-<style>
-    .swal2-popup {
-        font-size: 1rem;
-    }
-    .swal2-modal .form-control {
-        margin-bottom: 10px;
-    }
-    .swal2-modal .form-label {
-        display: block;
-        text-align: left;
-        font-weight: 500;
-        margin-bottom: 5px;
-    }
-    .swal2-modal .invalid-feedback {
-        display: block;
-        width: 100%;
-        text-align: left;
-        color: #dc3545;
-        font-size: 0.875em;
-        margin-top: -8px;
-        margin-bottom: 8px;
-    }
-    .detail-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    .detail-table td {
-        padding: 6px 4px;
-        vertical-align: top;
-        text-align: left;
-    }
-    .detail-table .label {
-        width: 35%;
-        font-weight: 500;
-    }
-    .detail-table .separator {
-        width: 5%;
-    }
-    .detail-table .value {
-        width: 60%;
-    }
-    .user-account-info {
-        margin-top: 10px;
-        padding-top: 10px;
-        border-top: 1px solid #dee2e6;
-    }
-    .no-account-text {
-        color: #dc3545;
-        font-style: italic;
-    }
-</style>
+
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -70,17 +18,14 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table id="tamu-datatable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+            <table id="tamu-datatable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%" data-ajax-url="<?= site_url('tamu/datatable') ?>">
                 <thead>
                     <tr>
                         <th>No</th>
                         <th>NIK</th>
                         <th>Nama</th>
-                        <th>Alamat</th>
                         <th>No.HP</th>
                         <th>Jenis Kelamin</th>
-                        <th>Tanggal Lahir</th>
-                        <th>Tanggal Daftar</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -95,11 +40,8 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<!-- DataTables JS -->
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
+
+
 
 <script>
 $(document).ready(function() {
@@ -107,35 +49,17 @@ $(document).ready(function() {
     var tamuTable = $('#tamu-datatable').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "<?= site_url('tamu/datatable') ?>",
-        columns: [
-            { data: 'no', orderable: false },
-            { data: 'nik' },
-            { data: 'nama' },
-            { data: 'alamat' },
-            { data: 'nohp' },
-            { data: 'jenkel' },
-            { data: 'tgllahir' },
-            { data: 'created_at' },
-            { data: 'action', orderable: false, searchable: false }
+        ajax: '<?= site_url('tamu/datatable') ?>',
+        info: true,
+        ordering: true,
+        paging: true,
+        order: [
+            [0, 'desc']
         ],
-        order: [[1, 'asc']],
-        language: {
-            search: "Cari:",
-            lengthMenu: "Tampilkan _MENU_ data",
-            zeroRecords: "Tidak ada data yang ditemukan",
-            info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
-            infoEmpty: "Tidak ada data tersedia",
-            infoFiltered: "(difilter dari total _MAX_ data)",
-            paginate: {
-                first: "Pertama",
-                last: "Terakhir",
-                next: "Selanjutnya",
-                previous: "Sebelumnya"
-            },
-            processing: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>'
-        },
-        responsive: true
+        "aoColumnDefs": [{
+            "bSortable": false,
+            "aTargets": ["no-short"]
+        }],
     });
 
     // Tambah data dengan AJAX

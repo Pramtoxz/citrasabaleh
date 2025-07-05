@@ -96,26 +96,39 @@ a:hover {
     align-items: stretch;
 }
 
-/* Sidebar
+/* Tombol Toggle Sidebar
    ========================================================================== */
-.sidebar-wrapper {
-    min-height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1030; /* Increased z-index to be above navbar */
-    transition: all var(--transition-speed);
-    width: var(--sidebar-width);
+#navbarToggleSidebar {
+    background-color: transparent;
+    border-color: rgba(255,255,255,0.5);
+    color: white;
+    margin-right: 15px;
+    transition: all 0.3s;
 }
 
+#navbarToggleSidebar:hover,
+#navbarToggleSidebar:focus {
+    background-color: rgba(255,255,255,0.1);
+    border-color: white;
+    color: white;
+    outline: none;
+    box-shadow: none;
+}
+
+/* Sidebar
+   ========================================================================== */
 #sidebar {
     min-width: var(--sidebar-width);
     max-width: var(--sidebar-width);
+    width: var(--sidebar-width);
     background: linear-gradient(145deg, var(--primary-color) 0%, var(--dark-color) 100%);
     color: #fff;
     transition: all var(--transition-speed);
     height: 100vh;
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1030;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
@@ -124,6 +137,7 @@ a:hover {
 #sidebar.active {
     min-width: var(--sidebar-collapsed-width);
     max-width: var(--sidebar-collapsed-width);
+    width: var(--sidebar-collapsed-width);
     text-align: center;
 }
 
@@ -261,7 +275,6 @@ a:hover {
     margin-left: var(--sidebar-width);
     display: flex;
     flex-direction: column;
-    padding-left: 20px; /* Added padding to create space between sidebar and content */
 }
 
 #content.active {
@@ -272,23 +285,40 @@ a:hover {
 /* Navbar
    ========================================================================== */
 .navbar {
-    background: linear-gradient(145deg, var(--primary-color) 0%, var(--dark-color) 100%);
-    padding: 15px 20px;
-    border: none;
-    border-radius: 0;
-    margin-bottom: 20px;
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
-    height: var(--navbar-height);
+    background-color: var(--primary-color);
     position: fixed;
-    top: 0;
-    right: 0;
-    left: var(--sidebar-width); /* Navbar starts after sidebar */
-    z-index: 1020; /* Lower than sidebar but still high */
+    width: calc(100% - var(--sidebar-width));
+    left: var(--sidebar-width);
+    height: var(--navbar-height);
+    padding: 0 1rem;
+    z-index: 1020;
     transition: all var(--transition-speed);
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
 }
 
 #content.active .navbar {
+    width: calc(100% - var(--sidebar-collapsed-width));
     left: var(--sidebar-collapsed-width);
+}
+
+/* Tombol Sidebar Collapse */
+#sidebarCollapse {
+    position: relative;
+    z-index: 1030;
+    box-shadow: none;
+    background-color: transparent;
+    border: none;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+#sidebarCollapse:hover, 
+#sidebarCollapse:focus {
+    background-color: rgba(255,255,255,0.1);
+    outline: none;
+    box-shadow: none;
 }
 
 .navbar .navbar-toggler {
@@ -473,6 +503,86 @@ a:hover {
     body.sidebar-active::after {
         opacity: 1;
         visibility: visible;
+    }
+}
+
+/* CSS untuk tampilan mobile - optimasi */
+@media (max-width: 767px) {
+    :root {
+        --sidebar-collapsed-width: 0;
+    }
+    
+    /* Sidebar di mobile */
+    #sidebar {
+        width: var(--sidebar-width);
+        left: -var(--sidebar-width);
+        transition: all 0.3s;
+    }
+    
+    /* Sidebar saat active (terbuka) di mobile */
+    #sidebar.active {
+        left: 0;
+        min-width: var(--sidebar-width);
+        max-width: var(--sidebar-width);
+        width: var(--sidebar-width);
+    }
+    
+    /* Content selalu full width di mobile */
+    #content {
+        width: 100%;
+        margin-left: 0;
+        transition: all 0.3s;
+    }
+    
+    /* Konten tidak bergeser saat sidebar terbuka */
+    #content.active {
+        width: 100%;
+        margin-left: 0;
+    }
+    
+    /* Overlay saat sidebar terbuka */
+    body::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1020;
+        display: none;
+        transition: all 0.3s;
+    }
+    
+    body.sidebar-active::after {
+        display: block;
+    }
+    
+    /* Navbar selalu full width */
+    .navbar {
+        width: 100% !important;
+        left: 0 !important;
+    }
+    
+    /* Pastikan teks menu tampil di mobile */
+    #sidebar ul li a span {
+        display: inline-block !important;
+        opacity: 1 !important;
+    }
+    
+    /* Perbaikan untuk submenu di mobile */
+    #sidebar ul ul {
+        position: relative !important;
+        left: 0 !important;
+        width: 100% !important;
+        box-shadow: none !important;
+        background: rgba(0, 0, 0, 0.1) !important;
+        padding-left: 15px;
+    }
+    
+    /* Pastikan submenu terbuka muncul */
+    #sidebar ul ul.show {
+        display: block !important;
     }
 }
 
@@ -770,3 +880,62 @@ a:hover {
     border: 1px solid #d1d3e2;
     margin-top: 0.5rem;
 } 
+
+.preview-image {
+    max-width: 200px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+.form-label {
+    font-weight: 500;
+}
+
+.swal2-popup {
+    font-size: 1rem;
+}
+.swal2-modal .form-control {
+    margin-bottom: 10px;
+}
+.swal2-modal .form-label {
+    display: block;
+    text-align: left;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+.swal2-modal .invalid-feedback {
+    display: block;
+    width: 100%;
+    text-align: left;
+    color: #dc3545;
+    font-size: 0.875em;
+    margin-top: -8px;
+    margin-bottom: 8px;
+}
+.detail-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.detail-table td {
+    padding: 6px 4px;
+    vertical-align: top;
+    text-align: left;
+}
+.detail-table .label {
+    width: 35%;
+    font-weight: 500;
+}
+.detail-table .separator {
+    width: 5%;
+}
+.detail-table .value {
+    width: 60%;
+}
+.user-account-info {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #dee2e6;
+}
+.no-account-text {
+    color: #dc3545;
+    font-style: italic;
+}

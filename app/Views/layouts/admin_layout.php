@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,6 +20,13 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/assets/css/admin_style.css">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
+
+    <!-- CSRF Token for AJAX requests -->
+    <meta name="csrf-token" content="<?= csrf_hash() ?>">
 
     <?= $this->renderSection('styles') ?>
 </head>
@@ -82,8 +90,33 @@
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
+
 <!-- Custom JS -->
 <script src="/assets/js/admin_script.js"></script>
+
+<!-- AJAX Setup for CSRF Token -->
+<script>
+    // Setup AJAX CSRF Token
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    
+    // Update CSRF token after each AJAX request
+    $(document).ajaxComplete(function(e, xhr, settings) {
+        var csrfName = '<?= csrf_token() ?>';
+        var csrfHash = xhr.getResponseHeader('X-CSRF-TOKEN');
+        if (csrfHash) {
+            $('meta[name="csrf-token"]').attr('content', csrfHash);
+        }
+    });
+</script>
 
 <!-- Logout functionality -->
 <script>

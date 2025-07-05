@@ -11,10 +11,8 @@ class CreateTamuTable extends Migration
     {
         $this->forge->addField([
             'nik' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'PrimaryKey' => true,
-                'notnull' => true
+                'type'           => 'VARCHAR',
+                'constraint'     => 16,
             ],
             'nama' => [
                 'type'       => 'VARCHAR',
@@ -22,11 +20,10 @@ class CreateTamuTable extends Migration
             ],
             'alamat' => [
                 'type'       => 'TEXT',
-                'constraint' => 100,
             ],
             'nohp' => [
-                'type'       => 'INT',
-                'constraint' => 11,
+                'type'       => 'VARCHAR',
+                'constraint' => 15,
             ],
             'jenkel' => [
                 'type'       => 'ENUM',

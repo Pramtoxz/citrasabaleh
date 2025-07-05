@@ -6,48 +6,60 @@
         </div>
 
         <ul class="list-unstyled components">
-            <li class="active">
-                <a href="#" class="dashboard">
+            <li class="<?= current_url() == site_url('admin') ? 'active' : '' ?>">
+                <a href="<?= site_url('admin') ?>" class="nav-link">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li>
-                <a href="#userSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+            <li class="<?= strpos(current_url(), 'tamu') !== false || strpos(current_url(), 'kamar') !== false ? 'active' : '' ?>">
+                <a href="#userSubmenu" data-bs-toggle="collapse" aria-expanded="<?= strpos(current_url(), 'tamu') !== false || strpos(current_url(), 'kamar') !== false ? 'true' : 'false' ?>" class="dropdown-toggle">
                     <i class="fas fa-building"></i>
                     <span>Master</span>
                 </a>
-                <ul class="collapse list-unstyled animate__animated animate__fadeIn" id="userSubmenu">
-                    <li>
-                        <a href="<?= site_url('tamu') ?>"><i class="fas fa-user me-2"></i>Tamu</a>
+                <ul class="collapse list-unstyled animate__animated animate__fadeIn <?= strpos(current_url(), 'tamu') !== false || strpos(current_url(), 'kamar') !== false ? 'show' : '' ?>" id="userSubmenu">
+                    <li class="<?= strpos(current_url(), 'tamu') !== false ? 'active' : '' ?>">
+                        <a href="<?= site_url('tamu') ?>" class="nav-link">
+                            <i class="fas fa-user me-2"></i>
+                            <span>Tamu</span>
+                        </a>
                     </li>
-                    <li>
-                        <a href="<?= site_url('kamar') ?>"><i class="fas fa-bed me-2"></i>Kamar</a>
+                    <li class="<?= strpos(current_url(), 'kamar') !== false ? 'active' : '' ?>">
+                        <a href="<?= site_url('kamar') ?>" class="nav-link">
+                            <i class="fas fa-bed me-2"></i>
+                            <span>Kamar</span>
+                        </a>
                     </li>
                 </ul>
             </li>
-            <li>
-                <a href="#productSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+            <li class="<?= strpos(current_url(), 'checkin') !== false || strpos(current_url(), 'checkout') !== false ? 'active' : '' ?>">
+                <a href="#productSubmenu" data-bs-toggle="collapse" aria-expanded="<?= strpos(current_url(), 'checkin') !== false || strpos(current_url(), 'checkout') !== false ? 'true' : 'false' ?>" class="dropdown-toggle">
                     <i class="fas fa-cash-register"></i>
                     <span>Transaction</span>
                 </a>
-                <ul class="collapse list-unstyled animate__animated animate__fadeIn" id="productSubmenu">
-                    <li>
-                        <a href="#"><i class="fas fa-building-circle-check me-2"></i>Check In</a>
+                <ul class="collapse list-unstyled animate__animated animate__fadeIn <?= strpos(current_url(), 'checkin') !== false || strpos(current_url(), 'checkout') !== false ? 'show' : '' ?>" id="productSubmenu">
+                    <li class="<?= strpos(current_url(), 'checkin') !== false ? 'active' : '' ?>">
+                        <a href="<?= site_url('checkin') ?>" class="nav-link">
+                            <i class="fas fa-building-circle-check me-2"></i>
+                            <span>Check In</span>
+                        </a>
                     </li>
-                    <li>
-                        <a href="#"><i class="fas fa-building-circle-check me-2"></i>Check Out</a>
+                    <li class="<?= strpos(current_url(), 'checkout') !== false ? 'active' : '' ?>">
+                        <a href="<?= site_url('checkout') ?>" class="nav-link">
+                            <i class="fas fa-building-circle-check me-2"></i>
+                            <span>Check Out</span>
+                        </a>
                     </li>
                 </ul>
             </li>
-            <li>
-                <a href="#">
+            <li class="<?= strpos(current_url(), 'report') !== false ? 'active' : '' ?>">
+                <a href="<?= site_url('report') ?>" class="nav-link">
                     <i class="fas fa-chart-line"></i>
                     <span>Report</span>
                 </a>
             </li>
-            <li>
-                <a href="#">
+            <li class="<?= strpos(current_url(), 'setting') !== false ? 'active' : '' ?>">
+                <a href="<?= site_url('setting') ?>" class="nav-link">
                     <i class="fas fa-cog"></i>
                     <span>Setting</span>
                 </a>

@@ -1,8 +1,45 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-        <button type="button" id="sidebarCollapse" class="btn btn-primary">
-            <i class="fas fa-align-left"></i>
+        <button type="button" id="navbarToggleSidebar" class="btn btn-outline-light me-2">
+            <i class="fas fa-bars"></i>
         </button>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const toggleBtn = document.getElementById('navbarToggleSidebar');
+                const sidebar = document.getElementById('sidebar');
+                const content = document.getElementById('content');
+                const body = document.body;
+                
+                if (toggleBtn && sidebar && content) {
+                    // Toggle sidebar saat tombol diklik
+                    toggleBtn.addEventListener('click', function() {
+                        // Toggle sidebar
+                        sidebar.classList.toggle('active');
+                        content.classList.toggle('active');
+                        
+                        // Toggle overlay pada mobile
+                        if (window.innerWidth <= 767) {
+                            body.classList.toggle('sidebar-active');
+                        }
+                    });
+                    
+                    // Close sidebar when clicking outside
+                    document.addEventListener('click', function(e) {
+                        // Hanya lakukan di mobile dan jika sidebar terbuka
+                        if (window.innerWidth <= 767 && body.classList.contains('sidebar-active')) {
+                            // Jika klik di luar sidebar dan bukan tombol toggle
+                            if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+                                sidebar.classList.remove('active');
+                                content.classList.remove('active');
+                                body.classList.remove('sidebar-active');
+                            }
+                        }
+                    });
+                }
+            });
+        </script>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

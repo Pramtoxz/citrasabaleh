@@ -1,9 +1,7 @@
 <?= $this->extend('layouts/admin_layout') ?>
 
 <?= $this->section('styles') ?>
-<!-- DataTables CSS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
+
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -17,7 +15,7 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table id="kamar-datatable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+            <table id="kamar-datatable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%" data-ajax-url="<?= site_url('kamar/datatable') ?>">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -26,12 +24,10 @@
                         <th>Harga</th>
                         <th>Kapasitas</th>
                         <th>Status</th>
-                        <th>Tanggal Dibuat</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Data will be loaded by DataTables -->
                 </tbody>
             </table>
         </div>
@@ -109,11 +105,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<!-- DataTables JS -->
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
+
 
 <script>
 $(document).ready(function() {
@@ -121,34 +113,17 @@ $(document).ready(function() {
     var kamarTable = $('#kamar-datatable').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "<?= site_url('kamar/datatable') ?>",
-        columns: [
-            { data: 'no', orderable: false },
-            { data: 'idkamar' },
-            { data: 'nama' },
-            { data: 'harga' },
-            { data: 'kapasitas' },
-            { data: 'status_kamar' },
-            { data: 'created_at' },
-            { data: 'action', orderable: false, searchable: false }
+        ajax: '<?= site_url('kamar/datatable') ?>',
+        info: true,
+        ordering: true,
+        paging: true,
+        order: [
+            [0, 'desc']
         ],
-        order: [[1, 'asc']],
-        language: {
-            search: "Cari:",
-            lengthMenu: "Tampilkan _MENU_ data",
-            zeroRecords: "Tidak ada data yang ditemukan",
-            info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
-            infoEmpty: "Tidak ada data tersedia",
-            infoFiltered: "(difilter dari total _MAX_ data)",
-            paginate: {
-                first: "Pertama",
-                last: "Terakhir",
-                next: "Selanjutnya",
-                previous: "Sebelumnya"
-            },
-            processing: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>'
-        },
-        responsive: true
+        "aoColumnDefs": [{
+            "bSortable": false,
+            "aTargets": ["no-short"]
+        }],
     });
 
     // Tambah data

@@ -25,10 +25,10 @@ class Tamu extends ResourceController
             'title' => 'Data Tamu - Admin Panel',
             'pageTitle' => 'Manajemen Tamu',
             'pageDescription' => 'Kelola data tamu dengan mudah',
-            'breadcrumb' => [
-                ['label' => 'Dashboard', 'link' => site_url('admin')],
-                ['label' => 'Tamu', 'link' => '#', 'active' => true]
-            ]
+            // 'breadcrumb' => [
+            //     ['label' => 'Dashboard', 'link' => site_url('admin')],
+            //     ['label' => 'Tamu', 'link' => '#', 'active' => true]
+            // ]
         ];
 
         return view('tamu/index', $data);
@@ -39,7 +39,7 @@ class Tamu extends ResourceController
         if ($this->request->isAJAX()) {
             $db = db_connect();
             $builder = $db->table('tamu')
-                          ->select('nik, nama, alamat, nohp, jenkel, tgllahir, created_at, iduser')
+                          ->select('nik, nama,nohp, jenkel, iduser')
                           ->where('deleted_at IS NULL');
 
             return DataTable::of($builder)
@@ -50,7 +50,7 @@ class Tamu extends ResourceController
                         <button type="button" class="btn btn-info btn-detail" data-id="'.$row->nik.'">
                             <i class="fas fa-eye"></i>
                         </button>
-                        <button type="button" class="btn btn-primary btn-edit" data-id="'.$row->nik.'">
+                        <button type="button" class="btn btn-warning btn-edit" data-id="'.$row->nik.'">
                             <i class="fas fa-edit"></i>
                         </button>
                         <button type="button" class="btn btn-danger btn-delete" data-id="'.$row->nik.'" data-nama="'.$row->nama.'">
@@ -60,7 +60,7 @@ class Tamu extends ResourceController
                     // Tambahkan tombol kunci jika iduser kosong
                     if (empty($row->iduser) || $row->iduser === null) {
                         $buttons .= '
-                        <button type="button" class="btn btn-warning btn-create-user" data-nik="'.$row->nik.'" data-nama="'.$row->nama.'">
+                        <button type="button" class="btn btn-success btn-create-user" data-nik="'.$row->nik.'" data-nama="'.$row->nama.'">
                             <i class="fas fa-key"></i>
                         </button>';
                     }
@@ -78,7 +78,8 @@ class Tamu extends ResourceController
                 ->edit('created_at', function($row) {
                     return date('d-m-Y H:i:s', strtotime($row->created_at));
                 })
-                ->toJson(true);
+                ->hide('iduser')
+                ->toJson();
         } else {
             return $this->failUnauthorized('Tidak dapat mengakses secara langsung');
         }
@@ -112,7 +113,37 @@ class Tamu extends ResourceController
             'tgllahir' => 'required|valid_date',
         ];
         
-        if (!$this->validate($rules)) {
+        $errorMessages = [
+            'nik' => [
+                'required' => 'NIK harus diisi',
+                'min_length' => 'NIK harus 16 digit',
+                'max_length' => 'NIK harus 16 digit',
+                'is_unique' => 'NIK sudah digunakan'
+            ],
+            'nama' => [
+                'required' => 'Nama harus diisi',
+                'min_length' => 'Nama minimal 3 karakter',
+                'max_length' => 'Nama maksimal 100 karakter'
+            ],
+            'alamat' => [
+                'required' => 'Alamat harus diisi'
+            ],
+            'nohp' => [
+                'required' => 'No. HP harus diisi',
+                'min_length' => 'No. HP minimal 10 digit',
+                'max_length' => 'No. HP maksimal 15 digit'
+            ],
+            'jenkel' => [
+                'required' => 'Jenis kelamin harus dipilih',
+                'in_list' => 'Jenis kelamin tidak valid'
+            ],
+            'tgllahir' => [
+                'required' => 'Tanggal lahir harus diisi',
+                'valid_date' => 'Format tanggal lahir tidak valid'
+            ]
+        ];
+        
+        if (!$this->validate($rules, $errorMessages)) {
             if ($this->request->isAJAX()) {
                 return $this->response->setJSON([
                     'status' => false,
@@ -219,7 +250,6 @@ class Tamu extends ResourceController
     public function show($id = null)
     {
         if ($this->request->isAJAX()) {
-            // Menggunakan query builder untuk join dengan tabel users
             $db = db_connect();
             $tamu = $db->table('tamu')
                 ->select('tamu.*, users.username, users.email')

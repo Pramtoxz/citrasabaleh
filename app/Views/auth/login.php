@@ -352,7 +352,7 @@
                     <div class="form-group">
                         <i class="fas fa-lock input-icon"></i>
                         <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-                        <button type="button" class="btn btn-outline-secondary toggle-password position-absolute end-0 top-0 mt-2 me-2" style="height: 46px; width: 46px; border-radius: 8px;">
+                        <button type="button" class="btn btn-outline-secondary toggle-password position-absolute end-0 top-0 mt-0 me-0" style="height: 50px; width: 50px; border-radius: 8px;">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
