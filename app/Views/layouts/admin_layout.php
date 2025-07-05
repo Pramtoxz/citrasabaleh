@@ -27,6 +27,9 @@
 
     <!-- CSRF Token for AJAX requests -->
     <meta name="csrf-token" content="<?= csrf_hash() ?>">
+    
+    <!-- Base URL for JavaScript -->
+    <meta name="base-url" content="<?= base_url() ?>">
 
     <?= $this->renderSection('styles') ?>
 </head>

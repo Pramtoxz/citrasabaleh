@@ -26,6 +26,15 @@
                     <?= csrf_field() ?>
 
                     <div class="mb-3">
+                        <label for="idkamar" class="form-label">Kode Kamar <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control <?= session('errors.idkamar') ? 'is-invalid' : '' ?>" 
+                            id="idkamar" name="idkamar" value="<?= $next_number ?>" readonly>
+                        <div class="invalid-feedback">
+                            <?= session('errors.idkamar') ?>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
                         <label for="nama" class="form-label">Nama Kamar <span class="text-danger">*</span></label>
                         <input type="text" class="form-control <?= session('errors.nama') ? 'is-invalid' : '' ?>" 
                             id="nama" name="nama" value="<?= old('nama') ?>" required>
@@ -113,7 +122,6 @@
 <?= $this->section('scripts') ?>
 <script>
 $(document).ready(function() {
-    // Preview gambar
     $('#gambar').on('change', function() {
         const file = this.files[0];
         if (file) {
@@ -125,7 +133,6 @@ $(document).ready(function() {
         }
     });
 
-    // Submit form dengan AJAX
     $('#formKamar').on('submit', function(e) {
         e.preventDefault();
         
@@ -147,7 +154,6 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if (response.status) {
-                    // Tampilkan pesan sukses
                     Swal.fire({
                         icon: 'success',
                         title: 'Berhasil',
@@ -156,12 +162,8 @@ $(document).ready(function() {
                         window.location.href = response.redirect;
                     });
                 } else {
-                    // Tampilkan pesan error
                     if (response.errors) {
-                        // Reset semua error
                         $('.is-invalid').removeClass('is-invalid');
-                        
-                        // Tampilkan error validasi
                         $.each(response.errors, function(key, value) {
                             $('#' + key).addClass('is-invalid');
                             if ($('#error-' + key).length) {

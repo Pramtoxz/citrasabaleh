@@ -10,17 +10,16 @@ use Hermawan\DataTables\DataTable;
 class Kamar extends ResourceController
 {
     protected $kamarModel;
-
+    
     public function __construct()
     {
         $this->kamarModel = new KamarModel();
-        helper('form');
     }
 
     public function index()
     {
         $data = [
-            'title' => 'Data Kamar - Admin Panel',
+            'title' => 'Data Kamar - Wisma Citra Sabaleh',
             'pageTitle' => 'Manajemen Kamar',
             'pageDescription' => 'Kelola data kamar dengan mudah',
             'breadcrumb' => [
@@ -60,13 +59,13 @@ class Kamar extends ResourceController
                 ->add('action', function($row) {
                     return '
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-info btn-sm btn-view" data-id="'.$row->idkamar.'">
+                        <button type="button" class="btn btn-info btn-sm btn-view btn-view-kamar" data-id="'.$row->idkamar.'">
                             <i class="fas fa-eye"></i>
                         </button>
                         <a href="'.site_url('kamar/edit/'.$row->idkamar).'" class="btn btn-warning btn-sm btn-edit" data-id="'.$row->idkamar.'">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <button type="button" class="btn btn-danger btn-sm btn-delete" data-id="'.$row->idkamar.'" data-nama="'.$row->nama.'">
+                        <button type="button" class="btn btn-danger btn-sm btn-delete" data-id="'.$row->idkamar.'" data-nama="'.$row->nama.'" data-url="'.site_url('kamar/delete/'.$row->idkamar).'">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>';
@@ -79,8 +78,13 @@ class Kamar extends ResourceController
 
     public function new()
     {
+        $db = db_connect();
+        $query = $db->query("SELECT CONCAT('KMR', LPAD(IFNULL(MAX(SUBSTRING(idkamar, 4)) + 1, 1), 3, '0')) AS next_number FROM kamar");
+        $row = $query->getRow();
+        $next_number = $row->next_number;
+
         $data = [
-            'title' => 'Tambah Kamar - Admin Panel',
+            'title' => 'Tambah Kamar - Wisma Citra Sabaleh',
             'pageTitle' => 'Tambah Data Kamar',
             'pageDescription' => 'Form untuk menambahkan data kamar baru',
             'breadcrumb' => [
@@ -88,7 +92,8 @@ class Kamar extends ResourceController
                 ['label' => 'Kamar', 'link' => site_url('kamar')],
                 ['label' => 'Tambah', 'link' => '#', 'active' => true]
             ],
-            'validation' => Services::validation()
+            'validation' => Services::validation(),
+            'next_number' => $next_number
         ];
 
         return view('kamar/create', $data);
@@ -96,8 +101,8 @@ class Kamar extends ResourceController
 
     public function create()
     {
-        // Validasi input
         $rules = [
+            'idkamar' => 'required|min_length[3]|max_length[100]',
             'nama' => 'required|min_length[3]|max_length[100]',
             'harga' => 'required|numeric',
             'kapasitas' => 'required|numeric',
@@ -107,6 +112,11 @@ class Kamar extends ResourceController
         ];
         
         $errorMessages = [
+            'idkamar' => [
+                'required' => 'Kode kamar harus diisi',
+                'min_length' => 'Kode kamar minimal 3 karakter',
+                'max_length' => 'Kode kamar maksimal 100 karakter'
+            ],
             'nama' => [
                 'required' => 'Nama kamar harus diisi',
                 'min_length' => 'Nama kamar minimal 3 karakter',
@@ -147,15 +157,11 @@ class Kamar extends ResourceController
             }
         }
         
-        // Upload file gambar
         $gambar = $this->request->getFile('gambar');
         $namaGambar = $gambar->getRandomName();
-        
-        // Pindahkan ke folder uploads/kamar
-        $gambar->move(WRITEPATH . 'uploads/kamar', $namaGambar);
-        
-        // Simpan data
+        $gambar->move(FCPATH . 'assets/img/kamar', $namaGambar);
         $data = [
+            'idkamar' => $this->request->getPost('idkamar'),
             'nama' => $this->request->getPost('nama'),
             'harga' => $this->request->getPost('harga'),
             'kapasitas' => $this->request->getPost('kapasitas'),
@@ -186,7 +192,7 @@ class Kamar extends ResourceController
         }
         
         $data = [
-            'title' => 'Edit Kamar - Admin Panel',
+            'title' => 'Edit Kamar - Wisma Citra Sabaleh',
             'pageTitle' => 'Edit Data Kamar',
             'pageDescription' => 'Form untuk mengubah data kamar',
             'breadcrumb' => [
@@ -216,7 +222,6 @@ class Kamar extends ResourceController
             }
         }
         
-        // Validasi input
         $rules = [
             'nama' => 'required|min_length[3]|max_length[100]',
             'harga' => 'required|numeric',
@@ -266,7 +271,6 @@ class Kamar extends ResourceController
             }
         }
         
-        // Siapkan data untuk update
         $data = [
             'nama' => $this->request->getPost('nama'),
             'harga' => $this->request->getPost('harga'),
@@ -274,24 +278,16 @@ class Kamar extends ResourceController
             'deskripsi' => $this->request->getPost('deskripsi'),
             'status_kamar' => $this->request->getPost('status_kamar')
         ];
-        
-        // Cek apakah ada upload gambar baru
         $gambar = $this->request->getFile('gambar');
         if ($gambar->isValid() && !$gambar->hasMoved()) {
-            // Hapus gambar lama jika ada
-            if (!empty($kamar['gambar']) && file_exists(WRITEPATH . 'uploads/kamar/' . $kamar['gambar'])) {
-                unlink(WRITEPATH . 'uploads/kamar/' . $kamar['gambar']);
+            if (!empty($kamar['gambar']) && file_exists(FCPATH . 'assets/img/kamar/' . $kamar['gambar'])) {
+                unlink(FCPATH . 'assets/img/kamar/' . $kamar['gambar']);
             }
-            
-            // Upload gambar baru
             $namaGambar = $gambar->getRandomName();
-            $gambar->move(WRITEPATH . 'uploads/kamar', $namaGambar);
+            $gambar->move(FCPATH . 'assets/img/kamar', $namaGambar);
             
-            // Tambahkan ke data update
             $data['gambar'] = $namaGambar;
         }
-        
-        // Update data kamar
         $this->kamarModel->update($id, $data);
         
         if ($this->request->isAJAX()) {
@@ -316,11 +312,9 @@ class Kamar extends ResourceController
                     'message' => 'Data kamar tidak ditemukan'
                 ]);
             }
-            
-            // Format data untuk ditampilkan
             $kamar['harga_formatted'] = 'Rp ' . number_format($kamar['harga'], 0, ',', '.');
             $kamar['status_text'] = $kamar['status_kamar'] == '1' ? 'Tersedia' : 'Tidak Tersedia';
-            $kamar['gambar_url'] = base_url('writable/uploads/kamar/' . $kamar['gambar']);
+            $kamar['gambar_url'] = base_url('assets/img/kamar/' . $kamar['gambar']);
             $kamar['created_at_formatted'] = date('d-m-Y H:i:s', strtotime($kamar['created_at']));
             $kamar['updated_at_formatted'] = date('d-m-Y H:i:s', strtotime($kamar['updated_at']));
             
@@ -329,7 +323,7 @@ class Kamar extends ResourceController
                 'data' => $kamar
             ]);
         } else {
-            return redirect()->to('kamar');
+            return redirect()->to('kamar')->with('error', 'Tidak dapat mengakses secara langsung');
         }
     }
 
@@ -344,8 +338,6 @@ class Kamar extends ResourceController
                     'message' => 'Data kamar tidak ditemukan'
                 ]);
             }
-            
-            // Soft delete
             $this->kamarModel->delete($id);
             
             return $this->response->setJSON([

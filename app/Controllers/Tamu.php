@@ -22,13 +22,13 @@ class Tamu extends ResourceController
     public function index()
     {
         $data = [
-            'title' => 'Data Tamu - Admin Panel',
+            'title' => 'Data Tamu - Wisma Citra Sabaleh',
             'pageTitle' => 'Manajemen Tamu',
             'pageDescription' => 'Kelola data tamu dengan mudah',
-            // 'breadcrumb' => [
-            //     ['label' => 'Dashboard', 'link' => site_url('admin')],
-            //     ['label' => 'Tamu', 'link' => '#', 'active' => true]
-            // ]
+            'breadcrumb' => [
+                ['label' => 'Dashboard', 'link' => site_url('admin')],
+                ['label' => 'Tamu', 'link' => '#', 'active' => true]
+            ]
         ];
 
         return view('tamu/index', $data);
@@ -88,7 +88,7 @@ class Tamu extends ResourceController
     public function new()
     {
         $data = [
-            'title' => 'Tambah Tamu - Admin Panel',
+            'title' => 'Tambah Tamu - Wisma Citra Sabaleh',
             'pageTitle' => 'Tambah Data Tamu',
             'pageDescription' => 'Form untuk menambahkan data tamu baru',
             'breadcrumb' => [
@@ -187,7 +187,7 @@ class Tamu extends ResourceController
         }
         
         $data = [
-            'title' => 'Edit Tamu - Admin Panel',
+            'title' => 'Edit Tamu - Wisma Citra Sabaleh',
             'pageTitle' => 'Edit Data Tamu',
             'pageDescription' => 'Form untuk mengubah data tamu',
             'breadcrumb' => [
@@ -295,8 +295,6 @@ class Tamu extends ResourceController
                     'message' => 'Data tamu tidak ditemukan'
                 ]);
             }
-            
-            // Soft delete
             $this->tamuModel->delete($id);
             
             return $this->response->setJSON([

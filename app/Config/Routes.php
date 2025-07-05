@@ -78,6 +78,8 @@ $routes->get('kamar/new', 'Kamar::new');
 $routes->post('kamar/create', 'Kamar::create');
 $routes->get('kamar/edit/(:segment)', 'Kamar::edit/$1');
 $routes->post('kamar/update/(:segment)', 'Kamar::update/$1');
+$routes->get('kamar/show/(:segment)', 'Kamar::show/$1');
+$routes->delete('kamar/delete/(:segment)', 'Kamar::delete/$1');
 
 // Auth routes
 $routes->get('auth', 'Auth::login');

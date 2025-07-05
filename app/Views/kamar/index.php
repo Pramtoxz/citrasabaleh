@@ -34,79 +34,9 @@
     </div>
 </div>
 
-<!-- Modal Detail Kamar -->
-<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="detailModalLabel">Detail Kamar</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-5 text-center mb-3">
-                        <img id="detail-gambar" src="" alt="Gambar Kamar" class="img-preview">
-                    </div>
-                    <div class="col-md-7">
-                        <h4 id="detail-nama" class="mb-3"></h4>
-                        <div class="table-responsive">
-                            <table class="table table-borderless">
-                                <tr>
-                                    <td style="width: 130px;"><strong>ID Kamar</strong></td>
-                                    <td id="detail-idkamar"></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Harga</strong></td>
-                                    <td id="detail-harga"></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Kapasitas</strong></td>
-                                    <td id="detail-kapasitas"></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Status</strong></td>
-                                    <td id="detail-status"></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Dibuat</strong></td>
-                                    <td id="detail-created"></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Diupdate</strong></td>
-                                    <td id="detail-updated"></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h6 class="card-title mb-0">Deskripsi</h6>
-                            </div>
-                            <div class="card-body" id="detail-deskripsi">
-                                <!-- Deskripsi kamar akan ditampilkan di sini -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <a id="btn-edit-modal" href="#" class="btn btn-warning">
-                    <i class="fas fa-edit me-1"></i> Edit
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-
-
 <script>
 $(document).ready(function() {
     // Initialize DataTables
@@ -125,64 +55,11 @@ $(document).ready(function() {
             "aTargets": ["no-short"]
         }],
     });
-
-    // Tambah data
+    
+    // Tambah data dengan AJAX
     $('#btnTambah').on('click', function(e) {
         e.preventDefault();
         window.location.href = $(this).attr('href');
-    });
-
-    // Lihat detail
-    $('#kamar-datatable').on('click', '.btn-view', function() {
-        var id = $(this).data('id');
-        
-        // AJAX request
-        $.ajax({
-            url: "<?= site_url('kamar/show/') ?>" + id,
-            type: "GET",
-            dataType: "json",
-            success: function(response) {
-                if(response.status) {
-                    var data = response.data;
-                    
-                    // Set URL untuk tombol edit
-                    $('#btn-edit-modal').attr('href', "<?= site_url('kamar/edit/') ?>" + data.idkamar);
-                    
-                    // Isi data ke modal
-                    $('#detail-nama').text(data.nama);
-                    $('#detail-idkamar').text(data.idkamar);
-                    $('#detail-harga').text(data.harga_formatted);
-                    $('#detail-kapasitas').text(data.kapasitas + ' orang');
-                    $('#detail-status').html(data.status_text == 'Tersedia' ? 
-                        '<span class="badge bg-success">Tersedia</span>' : 
-                        '<span class="badge bg-danger">Tidak Tersedia</span>');
-                    $('#detail-created').text(data.created_at_formatted);
-                    $('#detail-updated').text(data.updated_at_formatted);
-                    $('#detail-deskripsi').html(data.deskripsi);
-                    $('#detail-gambar').attr('src', data.gambar_url);
-                    $('#detail-gambar').attr('alt', 'Gambar ' + data.nama);
-                    
-                    // Tampilkan modal
-                    var detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
-                    detailModal.show();
-                } else {
-                    // Tampilkan pesan error
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal',
-                        text: response.message,
-                    });
-                }
-            },
-            error: function(xhr, status, error) {
-                // Tampilkan pesan error
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Terjadi Kesalahan',
-                    text: 'Gagal mengambil data kamar',
-                });
-            }
-        });
     });
 
     // Edit data
