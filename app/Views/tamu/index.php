@@ -60,66 +60,16 @@ $(document).ready(function() {
             "bSortable": false,
             "aTargets": ["no-short"]
         }],
+        drawCallback: function() {
+            // Reinitialize event handlers setelah reload
+            reinitializeEvents();
+        }
     });
 
     // Tambah data dengan AJAX
     $('#btnTambah').on('click', function(e) {
         e.preventDefault();
         window.location.href = $(this).attr('href');
-    });
-
-    $('#tamu-datatable').on('click', '.btn-delete', function() {
-        var id = $(this).data('id');
-        var nama = $(this).data('nama');
-        
-        Swal.fire({
-            title: 'Anda yakin?',
-            html: `Ingin menghapus tamu <strong>${nama}</strong>?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // AJAX request untuk hapus data
-                $.ajax({
-                    url: "<?= site_url('tamu/delete/') ?>" + id,
-                    type: "DELETE",
-                    dataType: "json",
-                    success: function(response) {
-                        if(response.status) {
-                            // Tampilkan pesan sukses
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: response.message,
-                            });
-                            
-                            // Refresh datatable
-                            tamuTable.ajax.reload();
-                        } else {
-                            // Tampilkan pesan error
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal',
-                                text: response.message,
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        // Tampilkan pesan error
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Terjadi Kesalahan',
-                            text: 'Gagal menghapus data tamu',
-                        });
-                    }
-                });
-            }
-        });
     });
 });
 </script>

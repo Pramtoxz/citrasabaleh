@@ -2,7 +2,7 @@
     <nav id="sidebar">
         <div class="sidebar-header">
             <h3 class="mb-0">Admin Panel</h3>
-            <p class="text-muted mb-0">Management System</p>
+            <p class="text-white mb-0">Management System</p>
         </div>
 
         <ul class="list-unstyled components">

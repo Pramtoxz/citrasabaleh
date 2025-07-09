@@ -50,10 +50,10 @@ class Tamu extends ResourceController
                         <button type="button" class="btn btn-info btn-detail" data-id="'.$row->nik.'">
                             <i class="fas fa-eye"></i>
                         </button>
-                        <button type="button" class="btn btn-warning btn-edit" data-id="'.$row->nik.'">
+                        <a href="'.site_url('tamu/edit/'.$row->nik).'" class="btn btn-warning btn-edit" data-id="'.$row->nik.'">
                             <i class="fas fa-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-danger btn-delete" data-id="'.$row->nik.'" data-nama="'.$row->nama.'">
+                        </a>
+                        <button type="button" class="btn btn-danger btn-delete" data-id="'.$row->nik.'" data-nama="'.$row->nama.'" data-url="'.site_url('tamu/delete/').$row->nik.'">
                             <i class="fas fa-trash"></i>
                         </button>';
                     
